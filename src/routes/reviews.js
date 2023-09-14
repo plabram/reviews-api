@@ -9,8 +9,10 @@ deleteReview } = require("../controllers/reviews")
 const router = express.Router()
 router.get("/", getAllReviews)
 router.get("/:id", getReviewById)
-router.post("/", createReview)
 router.put("/:id", updateReviewById)
-router.delete("/:id", deleteReview)
+
+// ALTERNATIVE REVIEW POST AND DELETE METHODS - LEAVE FOR REFERENCE
+// router.post("/", createReview)
+// router.delete("/:id", deleteReview)
 
 module.exports = router

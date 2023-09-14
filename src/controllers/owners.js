@@ -6,6 +6,9 @@ const {
   updateOwnerInDb,
   deleteOwnerFromDb
 } = require("../repositories/owners")
+const {
+  deleteReviewFromDb
+} = require("../repositories/reviews")
 const { Review, Owner } = require("../models/mongo")
 
 const getAllOwners = async (req,res)=> {
@@ -29,11 +32,24 @@ const newOwner = await createOwnerInDb(ownerObject)
 
 const updateOwnerById = async (req, res) => {
   const {id} = req.params
-  let dateUpdate = req.body
-  dateUpdate.lastUpdated = new Date
-  console.log(dateUpdate)
 const owner = await updateOwnerInDb(id, req.body)
 res.status(200).json({data: owner})
+}
+
+const addReview = async (req, res) => {
+  const id = req.params.id
+  const newReview = new Review({
+    stars: req.body.stars,
+    title: req.body.title,
+    text: req.body.text,
+    _owner: id
+  })
+  await newReview.save()
+  let owner = await getOwnerByIdFromDb(id)
+owner.reviews.push(newReview)
+const updatedOwner = await updateOwnerInDb(id, owner)
+  res.status(201).json(newReview)
+  console.log(`New review ${newReview._id} added to owner ${updatedOwner._id}`)
 }
 
 const deleteOwner = async (req,res)=>{
@@ -44,10 +60,22 @@ const deleteOwner = async (req,res)=>{
   res.status(200).json({data: "Owner and associated reviews deleted"})
   }
 
+  const deleteReview = async (req,res)=>{
+    const {id} = req.params
+    const {reviewid} = req.params
+    let owner = await getOwnerByIdFromDb(id)
+    owner.reviews.pull(reviewid)
+    await updateOwnerInDb(id, owner)
+    await deleteReviewFromDb(reviewid)
+    res.status(200).json({data: "Review ${reviewid} deleted from Owner ${id} and Reviews table"})
+  }
+
 module.exports = {
   getAllOwners, 
   getOwnerById, 
   createOwner,
   updateOwnerById,
-  deleteOwner
+  addReview,
+  deleteOwner,
+  deleteReview
 }

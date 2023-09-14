@@ -6,18 +6,18 @@ const reviewSchema = new mongoose.Schema({
     text: {type: String, required: false},
     _owner: 
     {type: mongoose.Schema.Types.ObjectId, 
-      ref: "Owner", required: true}
+      ref: "Owner"}
 })
 
-const embeddedReviewSchema = new mongoose.Schema({
-  stars: {type: Number, required: true},
-  title: {type: String, required: true}
-})
+// const embeddedReviewSchema = new mongoose.Schema({
+//   stars: {type: Number, required: true},
+//   title: {type: String, required: true}
+// })
 
 const ownerSchema = new mongoose.Schema({
   name: {type: String, required: true},
   bio: {type: String, required: false},
-  reviews: [embeddedReviewSchema]
+  reviews: [reviewSchema]
 })
 
 const Owner = mongoose.model("Owner", ownerSchema)
