@@ -10,15 +10,24 @@ const {
 } = require("../repositories/reviews")
 
 const getAllReviews = async (req,res)=> {
-  const {filter} = req.query
+try
+  {const {filter} = req.query
   const reviews = await getAllReviewsFromDb(filter)
-  res.status(200).json({data: reviews})
+  res.status(200).json({data: reviews})}
+  catch {
+    return next(setError(400, "Can't find reviews"))
+  }
+
 }
 
 const getReviewById = async (req,res) => {
-  const {id} = req.params
+  try
+  {const {id} = req.params
       const review = await getReviewByIdFromDb(id)
-      res.status(200).json({data: review})
+      res.status(200).json({data: review})}
+      catch {
+        return next(setError(400, "Can't find review"))
+      }
 }
 
 // ALTERNATIVE REVIEW CREATION METHOD - LEAVE FOR REFERENCE
@@ -35,12 +44,16 @@ const getReviewById = async (req,res) => {
 // }
 
 const updateReviewById = async (req, res) => {
-  const {id} = req.params
+  try
+  {const {id} = req.params
   let dateUpdate = req.body
   dateUpdate.lastUpdated = new Date
   console.log(dateUpdate)
 const review = await updateReviewInDb(id, req.body)
-res.status(200).json({data: review})
+res.status(200).json({data: review})}
+catch {
+  return next(setError(400, "Can't update review"))
+}
 }
 
 // ALTERNATIVE REVIEW DELETION METHOD - LEAVE FOR REFERENCE
