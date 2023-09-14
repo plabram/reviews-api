@@ -24,7 +24,7 @@ app.disable("x-powered-by")
 
 app.use("/api", mainRouter)
 
-app.use("*", (req,res, next)=>{
+app.use("*", (req, res, next)=>{
   return next(setError(404, "Not found"))
 })
 
