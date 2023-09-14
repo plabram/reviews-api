@@ -28,13 +28,8 @@ app.use("*", (req,res, next)=>{
   return next(setError(404, "Not found"))
 })
 
-app.use((error, req,res, next)=>{
-return res.status(error.status || 500).json(error.message || "Internal server error")
-})
-
-app.use((error,req,res,next)=>{
-  console.log(">> Server error", error)
-  res.status(500).json({data: "Internal server error 🧯"})
+app.use((error, req, res, next)=>{
+return res.status(error.status || 500).json(error.message || "Internal server error 🧯")
 })
 
 const PORT = 4001
