@@ -3,6 +3,7 @@ const express = require('express')
 require("./config/db")
 const rateLimit = require('express-rate-limit')
 const mainRouter = require("./routes") // automatically imports index
+const { setError } = require("./config/error")
 const app = express()
 
 const limiter = rateLimit({
@@ -23,8 +24,12 @@ app.disable("x-powered-by")
 
 app.use("/api", mainRouter)
 
-app.use("*", (req,res)=>{
-  res.status(404).json({data: "Not found 🧭"})
+app.use("*", (req,res, next)=>{
+  return next(setError(404, "Not found"))
+})
+
+app.use((error, req,res, next)=>{
+return res.status(error.status || 500).json(error.message || "Internal server error")
 })
 
 app.use((error,req,res,next)=>{

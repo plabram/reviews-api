@@ -1,22 +1,22 @@
 const mongoose = require("mongoose")
 
 const reviewSchema = new mongoose.Schema({
-    stars: Number,
-    title: String,
-    text: String,
+    stars: {type: Number, required: true},
+    title: {type: String, required: true},
+    text: {type: String, required: false},
     _owner: 
     {type: mongoose.Schema.Types.ObjectId, 
-      ref: "Owner"}
+      ref: "Owner", required: true}
 })
 
 const embeddedReviewSchema = new mongoose.Schema({
-  stars: Number,
-  title: String
+  stars: {type: Number, required: true},
+  title: {type: String, required: true}
 })
 
 const ownerSchema = new mongoose.Schema({
-  name: String,
-  bio: String,
+  name: {type: String, required: true},
+  bio: {type: String, required: false},
   reviews: [embeddedReviewSchema]
 })
 
