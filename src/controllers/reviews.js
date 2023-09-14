@@ -1,5 +1,5 @@
 const { now } = require("mongoose")
-const {Owner} = require("../models/mongo")
+const {setError} = require("../config/error")
 
 const {
   getAllReviewsFromDb, 
@@ -9,7 +9,7 @@ const {
   // deleteReviewFromDb
 } = require("../repositories/reviews")
 
-const getAllReviews = async (req,res)=> {
+const getAllReviews = async (req,res,next)=> {
 try
   {const {filter} = req.query
   const reviews = await getAllReviewsFromDb(filter)
@@ -20,7 +20,7 @@ try
 
 }
 
-const getReviewById = async (req,res) => {
+const getReviewById = async (req,res,next) => {
   try
   {const {id} = req.params
       const review = await getReviewByIdFromDb(id)
@@ -43,7 +43,7 @@ const getReviewById = async (req,res) => {
 // res.status(201).json({data: newReview})
 // }
 
-const updateReviewById = async (req, res) => {
+const updateReviewById = async (req, res,next) => {
   try
   {const {id} = req.params
   let dateUpdate = req.body

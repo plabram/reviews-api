@@ -7,11 +7,13 @@ const {
   deleteOwnerFromDb
 } = require("../repositories/owners")
 const {
-  deleteReviewFromDb
+  deleteReviewFromDb,
+  deleteAllReviewsFromDb
 } = require("../repositories/reviews")
-const { Review, Owner } = require("../models/mongo")
+const { Review } = require("../models/mongo")
+const {setError} = require("../config/error")
 
-const getAllOwners = async (req,res)=> {
+const getAllOwners = async (req,res,next)=> {
 try
   {const {filter} = req.query
   const owners = await getAllOwnersFromDb(filter)
@@ -21,7 +23,7 @@ try
   }
 }
 
-const getOwnerById = async (req,res) => {
+const getOwnerById = async (req,res,next) => {
   try
   {const {id} = req.params
       const owner = await getOwnerByIdFromDb(id)
@@ -31,10 +33,9 @@ const getOwnerById = async (req,res) => {
       }
 }
 
-const createOwner = async (req, res) => {
+const createOwner = async (req, res,next) => {
 try
-  {let ownerObject = {...req.body}
-  ownerObject.created = new Date
+  {const ownerObject = {...req.body}
 const newOwner = await createOwnerInDb(ownerObject)
   res.status(201).json({data: newOwner})}
   catch {
@@ -42,7 +43,7 @@ const newOwner = await createOwnerInDb(ownerObject)
   }
 }
 
-const updateOwnerById = async (req, res) => {
+const updateOwnerById = async (req, res,next) => {
   try {const {id} = req.params
 const owner = await updateOwnerInDb(id, req.body)
 res.status(200).json({data: owner})}
@@ -51,7 +52,7 @@ catch {
 }
 }
 
-const addReview = async (req, res) => {
+const addReview = async (req, res,next) => {
   try
   {const id = req.params.id
   const newReview = new Review({
@@ -71,10 +72,11 @@ const updatedOwner = await updateOwnerInDb(id, owner)
   }
 }
 
-const deleteOwner = async (req,res)=>{
+const deleteOwner = async (req,res,next)=>{
   try
   {const {id} = req.params
-  const deletedReviews = await Review.deleteMany({_owner: id})
+  // const deletedReviews = await Review.deleteMany({_owner: id})
+  await deleteAllReviewsFromDb(id)
   await deleteOwnerFromDb(id)
   res.status(200).json({data: "Owner and associated reviews deleted"})}
   catch {
@@ -82,7 +84,7 @@ const deleteOwner = async (req,res)=>{
   }
   }
 
-  const deleteReview = async (req,res)=>{
+  const deleteReview = async (req,res,next)=>{
     try
     {const {id} = req.params
     const {reviewid} = req.params

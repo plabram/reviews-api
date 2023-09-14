@@ -30,10 +30,15 @@ const deleteReviewFromDb = async (id) => {
   await Review.deleteOne({_id: id})
 }
 
+const deleteAllReviewsFromDb = async (ownerid) => {
+  await Review.deleteMany({_owner: ownerid})
+}
+
 module.exports = {
   getAllReviewsFromDb,
   getReviewByIdFromDb,
   // createReviewInDb,
   updateReviewInDb,
-  deleteReviewFromDb
+  deleteReviewFromDb,
+  deleteAllReviewsFromDb
 }
