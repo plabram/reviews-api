@@ -4,13 +4,17 @@ const {
   getOwnerById, 
   createOwner, 
   updateOwnerById,
-deleteOwner } = require("../controllers/owners")
+  addReview,
+deleteOwner,
+deleteReview } = require("../controllers/owners")
 
 const router = express.Router()
 router.get("/", getAllOwners)
 router.get("/:id", getOwnerById)
 router.post("/", createOwner)
 router.put("/:id", updateOwnerById)
+router.put("/:id/reviews", addReview)
 router.delete("/:id", deleteOwner)
+router.delete("/:id/reviews/:reviewid", deleteReview)
 
 module.exports = router

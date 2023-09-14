@@ -13,12 +13,13 @@ const getReviewByIdFromDb = async (id) => {
       return review
 }
 
-const createReviewInDb = async (payload) => {
-  const newReview = new Review(payload)
-  await newReview.save()
-  await newReview.populate("_owner")
-  return newReview
-}
+// RELATED TO ALTERNATIVE REVIEW CREATION METHOD - LEAVE FOR REFERENCE
+// const createReviewInDb = async (payload) => {
+//   const newReview = new Review(payload)
+//   await newReview.save()
+//   await newReview.populate("_owner")
+//   return newReview
+// }
 
 const updateReviewInDb = async (id, payload) => {
   const review = await Review.findByIdAndUpdate(id, payload, {new:true})
@@ -32,7 +33,7 @@ const deleteReviewFromDb = async (id) => {
 module.exports = {
   getAllReviewsFromDb,
   getReviewByIdFromDb,
-  createReviewInDb,
+  // createReviewInDb,
   updateReviewInDb,
   deleteReviewFromDb
 }
